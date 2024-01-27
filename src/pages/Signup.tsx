@@ -29,36 +29,51 @@ const Signup = () => {
 
 	const signupHandler = async () => {
 		setShowLoader(true);
+		setErrorMessage("");
+
 		const data = {
 			username: values.name,
 			email: values.email,
 			password: values.password,
 		};
-		const response = await signupAPI(data);
+		try {
+			const response = await signupAPI(data);
 
-		if (response.status === 201) {
-			const res = response as AxiosResponse;
-			// console.log(res.data);
-			// 1- set global state
-			const user = {
-				_id: res.data.user._id,
-				name: res.data.user.username,
-				email: res.data.user.email,
-				auth: res.data.auth,
-			};
-			dispatch(setUser(user));
-			// 2- redirect to home
-			navigate("/");
-		} else {
-			const err = response as AxiosError;
-			const errResponse = err.response as AxiosResponse;
-			setErrorMessage(errResponse.data.message);
+			if (response.status === 201) {
+				const res = response as AxiosResponse;
+				// console.log(res.data);
+				// 1- set global state
+				const user = {
+					_id: res.data.user._id,
+					name: res.data.user.username,
+					email: res.data.user.email,
+					auth: res.data.auth,
+				};
+				dispatch(setUser(user));
+				// 2- redirect to home
+				navigate("/");
+			}
+			if (response.status !== 201) {
+				const err = response as AxiosError;
 
-			setTimeout(() => {
-				setErrorMessage("");
-			}, 10000);
+				if (err.code === "ERR_NETWORK") {
+					throw Error("Custom error");
+				}
+
+				const errResponse = err.response as AxiosResponse;
+				setErrorMessage(errResponse?.data?.message);
+
+				console.log("else of signup", err);
+				// setTimeout(() => {
+				// 	setErrorMessage("");
+				// }, 10000);
+			}
+			setShowLoader(false);
+		} catch (error) {
+			// console.log("catch of signup", error);
+			setErrorMessage("Connection refused from Backend.");
+			setShowLoader(false);
 		}
-		setShowLoader(false);
 	};
 
 	useEffect(() => {

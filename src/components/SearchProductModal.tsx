@@ -1,6 +1,7 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { searchProductAPI } from "../api/internal";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SearchProductModal = ({
 	value,
@@ -10,24 +11,30 @@ const SearchProductModal = ({
 	setShowSearchProductModal: Dispatch<SetStateAction<boolean>>;
 }) => {
 	const [searchedProducts, setSearchedProducts] = useState<
-		{ title: string }[]
+		{ title: string; id: string }[]
 	>([]);
+
+	const [showSearchError, setShowSearchError] = useState(false);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		(async function () {
 			if (value.length === 0) {
 				return;
 			}
+			setShowSearchError(false);
 			const response = await searchProductAPI(value);
 			if (response.status === 200) {
 				const res = response as AxiosResponse;
 				setSearchedProducts(res.data.title);
 			} else {
-				const err = response as AxiosError;
-				console.log("error message ::", err.message);
+				// const err = response as AxiosError;
+				// console.log("error message ::", err.message);
+				setShowSearchError(true);
 			}
 		})();
 	}, [value]);
+
 	return (
 		<div className="border border-c1d rounded-lg w-269 h-280 bg-c1h font-poppins shadow-lg shadow-stone-400 overflow-auto">
 			<div
@@ -36,18 +43,32 @@ const SearchProductModal = ({
 			>
 				Close X
 			</div>
-			{searchedProducts.length === 0 && (
+
+			{searchedProducts.length === 0 && !showSearchError && (
 				<p className="flex h-full justify-center items-center bg-c2d">
 					{value.length === 0
 						? "Please enter value"
 						: "No product find"}
 				</p>
 			)}
+
+			{showSearchError && (
+				<div className="bg-red-300 h-full flex justify-center items-center">
+					<p className="font-bold text-center">
+						Connection refused from backend.
+					</p>
+				</div>
+			)}
+
 			{searchedProducts.map((product, i) => {
 				return (
 					<p
-						className="hover:bg-c1d w-full text-center px-2 py-1 border-b border-c1c rounded-t-lg"
+						className="hover:bg-c1d w-full text-center px-2 py-1 border-b border-c1c rounded-t-lg cursor-pointer"
 						key={i}
+						onClick={() => {
+							navigate(`/product/description/${product.id}`);
+							setShowSearchProductModal(false);
+						}}
 					>
 						{product.title}
 					</p>

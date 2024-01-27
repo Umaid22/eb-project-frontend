@@ -35,6 +35,7 @@ const UserDetailsModal = ({ setShowUserModal }: PropTypes) => {
 			// const message = errData.data.message;
 			// setErrorMessage(err.message);
 			setErrorMessage(err.data?.message);
+			// console.log(err);
 			setTimeout(() => {
 				setErrorMessage("");
 			}, 6000);
@@ -46,7 +47,7 @@ const UserDetailsModal = ({ setShowUserModal }: PropTypes) => {
 		<div className="border border-c1d rounded-md bg-c1h px-6 py-10 flex flex-col gap-6 items-center justify-between shadow-lg shadow-stone-400 w-36">
 			{userName && (
 				<div>
-					<p>LoggedIn as: </p>
+					<p>Logged In as: </p>
 					<p className="font-poppins font-semibold">{userName}</p>
 				</div>
 			)}

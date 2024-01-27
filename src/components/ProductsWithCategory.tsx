@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { ReduxStateType } from "../types";
 
 import arrowRightBlack from "../assets/icons/arrow-right-black1.svg";
@@ -13,8 +13,12 @@ import {
 	getBestSellingProducts,
 	getBestFarmerProducts,
 } from "../store/slices/productsSlice";
+import ErrorMessage from "./ErrorMessage";
 
 const ProductsWithCategory = () => {
+	const [bestSellingError, setBestSellingError] = useState(false);
+	const [bestFarmerError, setBestFarmerError] = useState(false);
+
 	const dispatch = useDispatch();
 	const bestSellingProducts = useSelector(
 		(state: ReduxStateType) => state.products.bestSellingProducts
@@ -34,6 +38,7 @@ const ProductsWithCategory = () => {
 
 		async function getProductsHandler(category: string) {
 			const response = await categorizedProductsAPI(category);
+
 			if (response.status === 200) {
 				const res = response as AxiosResponse;
 				// console.log(`res-${category} ::`, res);
@@ -47,9 +52,16 @@ const ProductsWithCategory = () => {
 				}
 				// console.log("res ::", res.data.product);
 			} else {
-				const res = response as AxiosError;
+				// const res = response as AxiosError;
 				// const message = res.response as AxiosResponse;
-				console.log("error message ::", res.message);
+				// console.log("error message ::", res.message);
+				if (category === "bestSelling") {
+					setBestSellingError(true);
+				}
+				if (category === "bestFarmers") {
+					setBestFarmerError(true);
+				}
+
 				// return res.message;
 			}
 		}
@@ -103,17 +115,32 @@ const ProductsWithCategory = () => {
 					</button>
 				</div>
 
-				<div className="flex flex-wrap lg:flex-nowrap justify-center gap-4 xl:gap-8">
-					{bestSellingProducts.length === 0 && <DummyProduct />}
-					{bestSellingProducts?.map((product) => {
-						return (
-							<SingleProduct
-								product={product}
-								key={product._id}
-							/>
-						);
-					})}
-				</div>
+				{bestSellingProducts.length === 0 && !bestSellingError && (
+					<div className="mx-auto">
+						<DummyProduct />
+					</div>
+				)}
+
+				{bestSellingError && (
+					<div className="border border-gray-500 rounded-xl w-full py-36 px-3 bg-gray-200">
+						<div className="mx-auto my-auto w-fit text-center">
+							<ErrorMessage message="Best selling Products fetching failed. Connection refused from Backend." />
+						</div>
+					</div>
+				)}
+
+				{bestSellingProducts.length !== 0 && (
+					<div className="flex flex-wrap lg:flex-nowrap justify-center gap-4 xl:gap-8">
+						{bestSellingProducts?.map((product) => {
+							return (
+								<SingleProduct
+									product={product}
+									key={product._id}
+								/>
+							);
+						})}
+					</div>
+				)}
 			</div>
 
 			<div className="px-4 flex flex-col md:flex-row items-center md:items-start gap-4 lg:gap-6 xl:gap-8 my-14">
@@ -162,17 +189,32 @@ const ProductsWithCategory = () => {
 					</button>
 				</div>
 
-				<div className="flex flex-wrap lg:flex-nowrap justify-center gap-4 xl:gap-8">
-					{bestFarmerProducts.length === 0 && <DummyProduct />}
-					{bestFarmerProducts?.map((product) => {
-						return (
-							<SingleProduct
-								product={product}
-								key={product._id}
-							/>
-						);
-					})}
-				</div>
+				{bestFarmerProducts.length === 0 && !bestFarmerError && (
+					<div className="mx-auto">
+						<DummyProduct />
+					</div>
+				)}
+
+				{bestFarmerError && (
+					<div className="border border-gray-500 rounded-xl w-full py-36 px-3 bg-gray-200">
+						<div className="mx-auto my-auto w-fit text-center">
+							<ErrorMessage message="Best Farmer's Products fetching failed. Connection refused from Backend." />
+						</div>
+					</div>
+				)}
+
+				{bestFarmerProducts.length !== 0 && (
+					<div className="flex flex-wrap lg:flex-nowrap justify-center gap-4 xl:gap-8">
+						{bestFarmerProducts?.map((product) => {
+							return (
+								<SingleProduct
+									product={product}
+									key={product._id}
+								/>
+							);
+						})}
+					</div>
+				)}
 			</div>
 		</div>
 	);

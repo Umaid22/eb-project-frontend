@@ -29,42 +29,52 @@ function Login() {
 
 	const loginHandler = async () => {
 		setShowLoader(true);
+		setErrorMessage("");
 
 		const data = {
 			email: values.email,
 			password: values.password,
 		};
-		const response = await loginAPI(data);
-		// console.log("inside login-page ::", response);
 
-		if (response.status === 200) {
-			const data = response as AxiosResponse;
-			// console.log("status is 200::", data?.data.user.email);
-			const user = {
-				_id: data.data.user._id,
-				name: data.data.user.username,
-				email: data.data.user.email,
-				auth: data.data.auth,
-			};
-			// 1- setUser in store
-			dispatch(setUser(user));
-			// 2- redirect to home page
-			navigate("/");
-		} else {
-			const error = response as AxiosError;
-			if (
-				error.code === "ERR_NETWORK" ||
-				error.code === "ERR_BAD_REQUEST"
-			) {
-				const data = error.response as AxiosResponse;
-				// console.log("status is not 200::", data.data.message);
-				setErrorMessage(data?.data?.message);
-				setTimeout(() => {
-					setErrorMessage("");
-				}, 10000);
+		try {
+			const response = await loginAPI(data);
+			// console.log("inside login-page ::", response);
+
+			if (response.status === 200) {
+				const data = response as AxiosResponse;
+				// console.log("status is 200::", data?.data.user.email);
+				const user = {
+					_id: data.data.user._id,
+					name: data.data.user.username,
+					email: data.data.user.email,
+					auth: data.data.auth,
+				};
+				// 1- setUser in store
+				dispatch(setUser(user));
+				// 2- redirect to home page
+				navigate("/");
+			} else {
+				const error = response as AxiosError;
+
+				// if(){}
+
+				if (
+					error.code === "ERR_NETWORK" ||
+					error.code === "ERR_BAD_REQUEST"
+				) {
+					const data = error.response as AxiosResponse;
+					console.log("status is not 200::", data.data.message);
+					setErrorMessage(data?.data?.message);
+					// setTimeout(() => {
+					// 	setErrorMessage("");
+					// }, 10000);
+				}
 			}
+			setShowLoader(false);
+		} catch (error) {
+			setErrorMessage("Connection refused from Backend.");
+			setShowLoader(false);
 		}
-		setShowLoader(false);
 	};
 
 	useEffect(() => {

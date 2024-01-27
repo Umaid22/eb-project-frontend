@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../components/Button";
 import gridIcon from "../assets/icons/grid-view-icon.svg";
 import listIcon from "../assets/icons/list-view.svg";
@@ -6,11 +6,16 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ReduxStateType } from "../types";
 import { allBlogsAPI, topBlogsAPI } from "../api/internal";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse, all } from "axios";
 import { getAllBlogs, getTopBlogs } from "../store/slices/blogSlice";
 import TopSingleBlog from "../components/TopSingleBlog";
+import DummyProduct from "../components/DummyProduct";
+import ErrorMessage from "../components/ErrorMessage";
 
 const Blogs = () => {
+	const [showBlogsError, setShowBlogsError] = useState(false);
+	const [showTopBlogError, setShowTopBlogError] = useState(false);
+
 	const dispatch = useDispatch();
 
 	const allBlogs = useSelector(
@@ -24,14 +29,16 @@ const Blogs = () => {
 		if (allBlogs.length === 0) {
 			getAllBlogsData();
 		}
+
 		async function getAllBlogsData() {
 			const response = await allBlogsAPI();
 			if (response.status === 200) {
 				const res = response as AxiosResponse;
 				dispatch(getAllBlogs(res.data.blogs));
 			} else {
-				const err = response as AxiosError;
-				console.log("error message ::", err.message);
+				// const err = response as AxiosError;
+				// console.log("error message ::", err.message);
+				setShowBlogsError(true);
 			}
 		}
 
@@ -44,8 +51,9 @@ const Blogs = () => {
 				const res = response as AxiosResponse;
 				dispatch(getTopBlogs(res.data.blogs));
 			} else {
-				const err = response as AxiosError;
-				console.log("error message ::", err.message);
+				// const err = response as AxiosError;
+				// console.log("error message ::", err.message);
+				setShowTopBlogError(true);
 			}
 		}
 		document.title = "Blogs";
@@ -86,6 +94,20 @@ const Blogs = () => {
 
 			{/* TOP SELECTED BLOGS */}
 			<div className="py-12 flex flex-wrap gap-8 justify-center">
+				{topBlogs.length === 0 && !showTopBlogError && (
+					<div className="mx-auto">
+						<DummyProduct />
+					</div>
+				)}
+
+				{showTopBlogError && (
+					<div className="border border-gray-500 rounded-xl w-full py-36 px-3 bg-gray-200">
+						<div className="mx-auto my-auto w-fit text-center">
+							<ErrorMessage message="Top blogs fetching failed. Connection refused from Backend." />
+						</div>
+					</div>
+				)}
+
 				{topBlogs.map((blog) => {
 					return <TopSingleBlog blog={blog} key={blog._id} />;
 				})}
@@ -195,6 +217,20 @@ const Blogs = () => {
 
 				{/* Right part */}
 				<div className="flex gap-8 flex-wrap justify-center">
+					{allBlogs.length === 0 && !showBlogsError && (
+						<div className="mx-auto">
+							<DummyProduct />
+						</div>
+					)}
+
+					{showBlogsError && (
+						<div className="border border-gray-500 rounded-xl w-full py-36 px-3 bg-gray-200">
+							<div className="mx-auto my-auto w-fit text-center">
+								<ErrorMessage message="All Blogs fetching failed. Connection refused from Backend." />
+							</div>
+						</div>
+					)}
+
 					{allBlogs.map((blog) => {
 						return (
 							<div key={blog._id}>

@@ -29,10 +29,10 @@ export const loginAPI = async (
 	let response;
 	try {
 		response = await api.post("/login", data);
-		// console.log("inside try ::", response);
+		// console.log("inside login API try ::", response);
 	} catch (error) {
 		const err = error as AxiosError;
-		// console.log("inside catch ::", err);
+		// console.log("inside login API catch ::", err);
 		return err;
 	}
 	return response;
@@ -46,6 +46,7 @@ export const signupAPI = async (
 		response = await api.post("/register", data);
 	} catch (error) {
 		const err = error as AxiosError;
+		// console.log("error from inside catch of api folder :: ", err);
 		return err;
 	}
 	return response;

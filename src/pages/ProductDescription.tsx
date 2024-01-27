@@ -14,8 +14,11 @@ import { useDispatch } from "react-redux";
 // } from "../store/slices/productsSlice";
 import { ProductType } from "../types";
 import { addItemToCart } from "../store/slices/cartSlice";
+import DummyProduct from "../components/DummyProduct";
+import ErrorMessage from "../components/ErrorMessage";
 
 const ProductDescription = () => {
+	const [showProductError, setShowProductError] = useState(false);
 	const { productid } = useParams();
 	const dispatch = useDispatch();
 
@@ -83,8 +86,9 @@ const ProductDescription = () => {
 				// dispatch(setSingleProduct(res.data.product));
 				setProductDetail(res.data.product);
 			} else {
-				const err = response as AxiosError;
-				console.log("errMessage ::", err.message);
+				// const err = response as AxiosError;
+				// console.log("errMessage ::", err.message);
+				setShowProductError(true);
 			}
 		}
 
@@ -112,193 +116,217 @@ const ProductDescription = () => {
 				<p className="text-c1a">{title}</p>
 			</div>
 
-			{/* PRODUCT DETAILS */}
-			<div className="py-4 flex flex-col sm:flex-row gap-4 lg:gap-8">
-				{/* LEFT SIDE */}
-				<div className="flex flex-col gap-9">
-					<div className="bg-c1h w-260 md:w-369 lg:w-469 xl:w-569 h-48 md:h-280 lg:h-370 xl:h-436 rounded-xl relative">
-						<img
-							src={imgprimary}
-							alt="product"
-							className="w-full h-full object-cover object-left-bottom rounded-xl"
-						/>
-						<div className="flex gap-3 absolute top-4 left-4">
-							{discount !== 0 && (
-								<div className="bg-c2e rounded-xl px-3 py-1 font-poppins font-semibold text-xs text-c2a w-fit h-fit">
-									- {discount} %
-								</div>
-							)}
-							{freeshipping && (
-								<div className="bg-c2e rounded-xl px-3 py-1 font-poppins font-semibold text-xs text-c2a w-fit h-fit">
-									Free shipping
-								</div>
-							)}
-						</div>
-					</div>
+			{productDetail._id.length === 0 && !showProductError && (
+				<div className="mx-auto w-fit">
+					<DummyProduct />
+				</div>
+			)}
 
-					<div className="bg-c1h w-260 md:w-369 lg:w-469 xl:w-569 h-48 md:h-280 lg:h-370 xl:h-436 rounded-xl hidden sm:block">
-						<img
-							src={imgsecondary}
-							alt="product"
-							className="w-full h-full object-cover rounded-xl"
-						/>
-					</div>
-					<div className="bg-c1h w-260 md:w-369 lg:w-469 xl:w-569 h-48 md:h-280 lg:h-370 xl:h-436 rounded-xl hidden sm:block">
-						<img
-							src={imgprimary}
-							alt="product"
-							className="w-full h-full object-cover rounded-xl"
-						/>
+			{showProductError && (
+				<div className="border border-gray-500 rounded-xl w-full py-36 px-3 bg-gray-200">
+					<div className="mx-auto my-auto w-fit text-center">
+						<ErrorMessage message="Product details fetching failed. Connection refused from Backend." />
 					</div>
 				</div>
+			)}
 
-				{/* RIGHT SIDE */}
-				<div>
-					{/* TOP */}
-					<div className="flex flex-col gap-10 pb-28">
-						<div>
-							<h2 className="font-poppins font-semibold text-xl md:text-26 lg:text-32 pb-2">
-								{title}
-							</h2>
-							<div className="flex gap-2">
-								<div className="flex gap-1">
-									{[...Array(rating)].length !== 0 &&
-										[...Array(rating)]?.map((e, i) => (
-											<img
-												src={starFillYellow}
-												alt="rating"
-												key={i}
-											/>
-										))}
-
-									{[...Array(5 - rating)].length !== 0 &&
-										[...Array(5 - rating)]?.map((e, i) => (
-											<img
-												src={starEmpty}
-												alt="rating"
-												key={i}
-											/>
-										))}
-								</div>
-								<div className="text-xs text-c1c underline">
-									(1 customer review)
-								</div>
-							</div>
-						</div>
-
-						<div className="text-17 w-72 md:w-350 lg:w-469 xl:w-569">
-							{detail}
-						</div>
-
-						<div className="flex flex-col lg:flex-row gap-5 xl:gap-10">
-							<div className="flex gap-6 xl:gap-12">
-								<div className="text-sm text-c1c flex flex-col gap-3">
-									<p>SKU:</p>
-									<p>Category:</p>
-									<p>Stock:</p>
-									<p>Farm</p>
-								</div>
-								<div className="text-sm flex flex-col gap-3">
-									<p>{sku}</p>
-									<p className="underline">{category}</p>
-									{stock !== 0 ? (
-										<p className="text-sm text-c2a underline">
-											In Stock
-										</p>
-									) : (
-										<p className="text-sm ">Out of Stock</p>
-									)}
-									<p>{farm}</p>
-								</div>
-							</div>
-
-							<div className="flex gap-6 xl:gap-12">
-								<div className="text-sm text-c1c flex flex-col gap-3">
-									<p>Freshness:</p>
-									<p>Buy by:</p>
-									<p>Delivery:</p>
-									<p>Delivery area</p>
-								</div>
-								<div className="text-sm flex flex-col gap-3">
-									<p>{freshness} days old</p>
-									<p>{buyby}</p>
-									<p>In {deliverytime} days</p>
-									<p>{deliveryarea}</p>
-								</div>
-							</div>
-						</div>
-
-						<div className="border-2 border-c1f rounded-xl flex gap-10 xl:gap-24 px-5 py-4 w-fit">
-							<div>
-								{discount !== 0 ? (
-									<>
-										<p className="font-poppins font-semibold text-26 text-c2a">
-											{discountedPrice.toFixed(2)} USD
-										</p>
-										<p className="font-poppins font-semibold text-xs text-c1c line-through">
-											{price} USD
-										</p>
-									</>
-								) : (
-									<p className="font-poppins font-semibold text-26 text-c2a">
-										{price} USD
-									</p>
+			{/* PRODUCT DETAILS */}
+			{productDetail._id.length !== 0 && (
+				<div className="py-4 flex flex-col sm:flex-row gap-4 lg:gap-8">
+					{/* LEFT SIDE */}
+					<div className="flex flex-col gap-9">
+						<div className="bg-c1h w-260 md:w-369 lg:w-469 xl:w-569 h-48 md:h-280 lg:h-370 xl:h-436 rounded-xl relative">
+							<img
+								src={imgprimary}
+								alt="product"
+								className="w-full h-full object-cover object-left-bottom rounded-xl"
+							/>
+							<div className="flex gap-3 absolute top-4 left-4">
+								{discount !== 0 && (
+									<div className="bg-c2e rounded-xl px-3 py-1 font-poppins font-semibold text-xs text-c2a w-fit h-fit">
+										- {discount} %
+									</div>
+								)}
+								{freeshipping && (
+									<div className="bg-c2e rounded-xl px-3 py-1 font-poppins font-semibold text-xs text-c2a w-fit h-fit">
+										Free shipping
+									</div>
 								)}
 							</div>
+						</div>
 
-							<div className="flex flex-col lg:flex-row gap-6">
-								<div className="flex items-center border rounded-xl border-c1d px-4 py-3 h-fit bg-c1h">
-									<div className="border-r border-c1d pr-4">
-										<p className="text-sm text-c1d">1</p>
-									</div>
-									<p className="font-poppins font-semibold pr-1 pl-4">
-										Pcs
-									</p>
-									<img src={arrowDownBlack} alt="arrow" />
-								</div>
-
-								<button
-									className="bg-c2a border-2 border-c2b rounded-xl px-4 py-3  h-fit font-poppins text-15 text-white font-bold"
-									onClick={() =>
-										dispatch(addItemToCart(productDetail))
-									}
-								>
-									+ Add to cart
-								</button>
-							</div>
+						<div className="bg-c1h w-260 md:w-369 lg:w-469 xl:w-569 h-48 md:h-280 lg:h-370 xl:h-436 rounded-xl hidden sm:block">
+							<img
+								src={imgsecondary}
+								alt="product"
+								className="w-full h-full object-cover rounded-xl"
+							/>
+						</div>
+						<div className="bg-c1h w-260 md:w-369 lg:w-469 xl:w-569 h-48 md:h-280 lg:h-370 xl:h-436 rounded-xl hidden sm:block">
+							<img
+								src={imgprimary}
+								alt="product"
+								className="w-full h-full object-cover rounded-xl"
+							/>
 						</div>
 					</div>
 
-					{/* BOTTOM */}
+					{/* RIGHT SIDE */}
 					<div>
-						<div className="border-b-2 border-c1f mb-12">
-							<div className="font-poppins font-semibold text-lg pb-4 border-b-2 border-c2a w-40">
-								Description
+						{/* TOP */}
+						<div className="flex flex-col gap-10 pb-28">
+							<div>
+								<h2 className="font-poppins font-semibold text-xl md:text-26 lg:text-32 pb-2">
+									{title}
+								</h2>
+								<div className="flex gap-2">
+									<div className="flex gap-1">
+										{[...Array(rating)].length !== 0 &&
+											[...Array(rating)]?.map((e, i) => (
+												<img
+													src={starFillYellow}
+													alt="rating"
+													key={i}
+												/>
+											))}
+
+										{[...Array(5 - rating)].length !== 0 &&
+											[...Array(5 - rating)]?.map(
+												(e, i) => (
+													<img
+														src={starEmpty}
+														alt="rating"
+														key={i}
+													/>
+												)
+											)}
+									</div>
+									<div className="text-xs text-c1c underline">
+										(1 customer review)
+									</div>
+								</div>
+							</div>
+
+							<div className="text-17 w-72 md:w-350 lg:w-469 xl:w-569">
+								{detail}
+							</div>
+
+							<div className="flex flex-col lg:flex-row gap-5 xl:gap-10">
+								<div className="flex gap-6 xl:gap-12">
+									<div className="text-sm text-c1c flex flex-col gap-3">
+										<p>SKU:</p>
+										<p>Category:</p>
+										<p>Stock:</p>
+										<p>Farm</p>
+									</div>
+									<div className="text-sm flex flex-col gap-3">
+										<p>{sku}</p>
+										<p className="underline">{category}</p>
+										{stock !== 0 ? (
+											<p className="text-sm text-c2a underline">
+												In Stock
+											</p>
+										) : (
+											<p className="text-sm ">
+												Out of Stock
+											</p>
+										)}
+										<p>{farm}</p>
+									</div>
+								</div>
+
+								<div className="flex gap-6 xl:gap-12">
+									<div className="text-sm text-c1c flex flex-col gap-3">
+										<p>Freshness:</p>
+										<p>Buy by:</p>
+										<p>Delivery:</p>
+										<p>Delivery area</p>
+									</div>
+									<div className="text-sm flex flex-col gap-3">
+										<p>{freshness} days old</p>
+										<p>{buyby}</p>
+										<p>In {deliverytime} days</p>
+										<p>{deliveryarea}</p>
+									</div>
+								</div>
+							</div>
+
+							<div className="border-2 border-c1f rounded-xl flex gap-10 xl:gap-24 px-5 py-4 w-fit">
+								<div>
+									{discount !== 0 ? (
+										<>
+											<p className="font-poppins font-semibold text-26 text-c2a">
+												{discountedPrice.toFixed(2)} USD
+											</p>
+											<p className="font-poppins font-semibold text-xs text-c1c line-through">
+												{price} USD
+											</p>
+										</>
+									) : (
+										<p className="font-poppins font-semibold text-26 text-c2a">
+											{price} USD
+										</p>
+									)}
+								</div>
+
+								<div className="flex flex-col lg:flex-row gap-6">
+									<div className="flex items-center border rounded-xl border-c1d px-4 py-3 h-fit bg-c1h">
+										<div className="border-r border-c1d pr-4">
+											<p className="text-sm text-c1d">
+												1
+											</p>
+										</div>
+										<p className="font-poppins font-semibold pr-1 pl-4">
+											Pcs
+										</p>
+										<img src={arrowDownBlack} alt="arrow" />
+									</div>
+
+									<button
+										className="bg-c2a border-2 border-c2b rounded-xl px-4 py-3  h-fit font-poppins text-15 text-white font-bold"
+										onClick={() =>
+											dispatch(
+												addItemToCart(productDetail)
+											)
+										}
+									>
+										+ Add to cart
+									</button>
+								</div>
 							</div>
 						</div>
 
+						{/* BOTTOM */}
 						<div>
-							<div className="pb-8">
-								<h2 className="font-poppins font-semibold text-15 pb-2">
-									Origins
-								</h2>
-								<p className="text-sm w-72 md:w-350 lg:w-469 xl:w-520">
-									{origins}
-								</p>
+							<div className="border-b-2 border-c1f mb-12">
+								<div className="font-poppins font-semibold text-lg pb-4 border-b-2 border-c2a w-40">
+									Description
+								</div>
 							</div>
 
 							<div>
-								<h2 className="font-poppins font-semibold text-15 pb-2">
-									How to cook
-								</h2>
-								<p className="text-sm w-72 md:w-350 lg:w-469 xl:w-520">
-									{howToCook}
-								</p>
+								<div className="pb-8">
+									<h2 className="font-poppins font-semibold text-15 pb-2">
+										Origins
+									</h2>
+									<p className="text-sm w-72 md:w-350 lg:w-469 xl:w-520">
+										{origins}
+									</p>
+								</div>
+
+								<div>
+									<h2 className="font-poppins font-semibold text-15 pb-2">
+										How to cook
+									</h2>
+									<p className="text-sm w-72 md:w-350 lg:w-469 xl:w-520">
+										{howToCook}
+									</p>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			)}
 
 			{/* RELATED PRODUCTS */}
 			{/* <RelatedProducts /> */}

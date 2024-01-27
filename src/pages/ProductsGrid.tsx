@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ReduxStateType } from "../types";
@@ -15,8 +15,11 @@ import DummyProduct from "../components/DummyProduct";
 import { getAllProductsAPI } from "../api/internal";
 import { AxiosError, AxiosResponse } from "axios";
 import { getProducts } from "../store/slices/productsSlice";
+import ErrorMessage from "../components/ErrorMessage";
 
 const ProductsGrid = () => {
+	const [showProductsError, setShowProductsError] = useState(false);
+
 	const dispatch = useDispatch();
 	const productsAll = useSelector(
 		(state: ReduxStateType) => state.products.productsAll
@@ -34,8 +37,9 @@ const ProductsGrid = () => {
 				const res = response as AxiosResponse;
 				dispatch(getProducts(res.data.products));
 			} else {
-				const err = response as AxiosError;
-				console.log("error message ::", err.message);
+				// const err = response as AxiosError;
+				// console.log("error message ::", err.message);
+				setShowProductsError(true);
 			}
 		}
 	});
@@ -346,15 +350,28 @@ const ProductsGrid = () => {
 				{/* RIGHT LIST */}
 				<div className="flex flex-wrap justify-center gap-8 h-fit">
 					{/* Single */}
-					{productsAll.length === 0 && <DummyProduct />}
-					{productsAll.map((product) => {
-						return (
-							<SingleGridProduct
-								product={product}
-								key={product._id}
-							/>
-						);
-					})}
+
+					{productsAll.length === 0 && !showProductsError && (
+						<DummyProduct />
+					)}
+
+					{showProductsError && (
+						<div className="border border-gray-500 rounded-xl w-full py-36 px-3 bg-gray-200">
+							<div className="mx-auto my-auto w-fit text-center">
+								<ErrorMessage message="Products fetching failed. Connection refused from Backend." />
+							</div>
+						</div>
+					)}
+
+					{productsAll.length !== 0 &&
+						productsAll.map((product) => {
+							return (
+								<SingleGridProduct
+									product={product}
+									key={product._id}
+								/>
+							);
+						})}
 				</div>
 			</div>
 
