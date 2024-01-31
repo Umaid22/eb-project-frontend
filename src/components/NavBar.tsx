@@ -111,7 +111,10 @@ function NavBar() {
 					<img src={arrowDownGreen} alt="arrow" />
 					{showBakeryModal && (
 						<div className="absolute top-8">
-							<NavItemModal title="Bakery" />
+							<NavItemModal
+								title="Bakery"
+								setShowModal={setShowBakeryModal}
+							/>
 						</div>
 					)}
 				</div>
@@ -127,7 +130,10 @@ function NavBar() {
 					<img src={arrowDownGreen} alt="arrow" />
 					{showFruitsModal && (
 						<div className="absolute top-8 z-10">
-							<NavItemModal title="Fruit" />
+							<NavItemModal
+								title="Fruit"
+								setShowModal={setShowFruitsModal}
+							/>
 						</div>
 					)}
 				</div>
@@ -142,7 +148,10 @@ function NavBar() {
 					<img src={arrowDownGreen} alt="arrow" />
 					{showMeatModal && (
 						<div className="absolute top-8 z-10">
-							<NavItemModal title="Meat" />
+							<NavItemModal
+								title="Meat"
+								setShowModal={setShowMeatModal}
+							/>
 						</div>
 					)}
 				</div>
@@ -157,7 +166,10 @@ function NavBar() {
 					<img src={arrowDownGreen} alt="arrow" />
 					{showDrinkModal && (
 						<div className="absolute top-8 z-10">
-							<NavItemModal title="Drink" />
+							<NavItemModal
+								title="Drink"
+								setShowModal={setShowDrinkModal}
+							/>
 						</div>
 					)}
 				</div>
@@ -172,7 +184,10 @@ function NavBar() {
 					<img src={arrowDownGreen} alt="arrow" />
 					{showKitchenModal && (
 						<div className="absolute top-8 z-10">
-							<NavItemModal title="Kitchen" />
+							<NavItemModal
+								title="Kitchen"
+								setShowModal={setShowKitchenModal}
+							/>
 						</div>
 					)}
 				</div>
@@ -187,7 +202,10 @@ function NavBar() {
 					<img src={arrowDownGreen} alt="arrow" />
 					{showNutritionModal && (
 						<div className="absolute top-8 z-10">
-							<NavItemModal title="Nutrition" />
+							<NavItemModal
+								title="Nutrition"
+								setShowModal={setShowNutritionModal}
+							/>
 						</div>
 					)}
 				</div>
@@ -202,7 +220,10 @@ function NavBar() {
 					<img src={arrowDownGreen} alt="arrow" />
 					{showBabyModal && (
 						<div className="absolute top-8 z-10">
-							<NavItemModal title="Baby" />
+							<NavItemModal
+								title="Baby"
+								setShowModal={setShowBabyModal}
+							/>
 						</div>
 					)}
 				</div>
@@ -217,7 +238,10 @@ function NavBar() {
 					<img src={arrowDownGreen} alt="arrow" />
 					{showPharmacyModal && (
 						<div className="absolute top-8 z-10">
-							<NavItemModal title="Pharmacy" />
+							<NavItemModal
+								title="Pharmacy"
+								setShowModal={setShowPharmacyModal}
+							/>
 						</div>
 					)}
 				</div>
@@ -262,7 +286,11 @@ function NavBar() {
 							</div>
 
 							{showBakeryModal && (
-								<NavHambergerItem title="Bakery" />
+								<NavHambergerItem
+									title="Bakery"
+									setShowItemModal={setShowBakeryModal}
+									setMenueModal={setShowMenuModal}
+								/>
 							)}
 						</div>
 
@@ -278,7 +306,11 @@ function NavBar() {
 							</div>
 
 							{showFruitsModal && (
-								<NavHambergerItem title="Fruits" />
+								<NavHambergerItem
+									title="Fruits"
+									setShowItemModal={setShowFruitsModal}
+									setMenueModal={setShowMenuModal}
+								/>
 							)}
 						</div>
 
@@ -293,7 +325,13 @@ function NavBar() {
 								<img src={arrowDownGreen} alt="arrow" />
 							</div>
 
-							{showMeatModal && <NavHambergerItem title="Meat" />}
+							{showMeatModal && (
+								<NavHambergerItem
+									title="Meat"
+									setShowItemModal={setShowMeatModal}
+									setMenueModal={setShowMenuModal}
+								/>
+							)}
 						</div>
 
 						<div>
@@ -308,7 +346,11 @@ function NavBar() {
 							</div>
 
 							{showDrinkModal && (
-								<NavHambergerItem title="Drink" />
+								<NavHambergerItem
+									title="Drink"
+									setShowItemModal={setShowDrinkModal}
+									setMenueModal={setShowMenuModal}
+								/>
 							)}
 						</div>
 
@@ -324,7 +366,11 @@ function NavBar() {
 							</div>
 
 							{showKitchenModal && (
-								<NavHambergerItem title="Kitchen" />
+								<NavHambergerItem
+									title="Kitchen"
+									setShowItemModal={setShowDrinkModal}
+									setMenueModal={setShowMenuModal}
+								/>
 							)}
 						</div>
 
@@ -340,7 +386,11 @@ function NavBar() {
 							</div>
 
 							{showNutritionModal && (
-								<NavHambergerItem title="Nutrition" />
+								<NavHambergerItem
+									title="Nutrition"
+									setShowItemModal={setShowNutritionModal}
+									setMenueModal={setShowMenuModal}
+								/>
 							)}
 						</div>
 
@@ -355,7 +405,13 @@ function NavBar() {
 								<img src={arrowDownGreen} alt="arrow" />
 							</div>
 
-							{showBabyModal && <NavHambergerItem title="Baby" />}
+							{showBabyModal && (
+								<NavHambergerItem
+									title="Baby"
+									setShowItemModal={setShowBabyModal}
+									setMenueModal={setShowMenuModal}
+								/>
+							)}
 						</div>
 
 						<div>
@@ -370,7 +426,11 @@ function NavBar() {
 							</div>
 
 							{showPharmacyModal && (
-								<NavHambergerItem title="Pharmacy" />
+								<NavHambergerItem
+									title="Pharmacy"
+									setShowItemModal={setShowPharmacyModal}
+									setMenueModal={setShowMenuModal}
+								/>
 							)}
 						</div>
 					</div>

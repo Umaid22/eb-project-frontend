@@ -28,6 +28,7 @@ const UserDetailsModal = ({ setShowUserModal }: PropTypes) => {
 		const response = await logoutAPI();
 		if (response.status === 200) {
 			dispatch(resetUser());
+			setShowUserModal(false);
 			navigate("/login");
 		} else {
 			const err = response as AxiosResponse;

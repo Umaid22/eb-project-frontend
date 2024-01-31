@@ -1,15 +1,34 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 const Upcoming = () => {
 	const { pageName } = useParams();
+	const [showLoader, setShowLoader] = useState(true);
+
+	const showLoaderHandler = () => {
+		setTimeout(() => {
+			setShowLoader(false);
+		}, 1000);
+	};
 
 	useEffect(() => {
+		setShowLoader(true);
+		showLoaderHandler();
+
 		document.title = `${pageName} Page`;
-	});
+		// console.log(showLoader);
+	}, [pageName]);
 
 	return (
 		<div className="flex flex-col items-center justify-center gap-6 pt-32 py-10">
+			{showLoader && (
+				<div
+					className={
+						"border-t-4 border-r-4 border-red-700 rounded-full w-8 h-8 animate-spin"
+					}
+				></div>
+			)}
+
 			<p className="font-bold font-poppins">
 				This is{" "}
 				<span className="text-c2a text-22 underline mx-4 shadow-sm shadow-c2a rounded-md py-2 px-3">

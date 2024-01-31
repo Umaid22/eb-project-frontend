@@ -67,7 +67,12 @@ const CartModal = ({ showCartState }: CartPropType) => {
 				</div>
 				<div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 p-2 bg-c1d rounded-b-lg">
 					<Button label="Continue shopping" variant="link" />
-					<div onClick={() => navigate("checkout")}>
+					<div
+						onClick={() => {
+							showCartState(false);
+							navigate("checkout");
+						}}
+					>
 						<Button label="Go to Checkout" variant="secondary" />
 					</div>
 				</div>

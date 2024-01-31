@@ -42,7 +42,7 @@ function Login() {
 
 			if (response.status === 200) {
 				const data = response as AxiosResponse;
-				// console.log("status is 200::", data?.data.user.email);
+				// console.log("status is 200::", data?.data);
 				const user = {
 					_id: data.data.user._id,
 					name: data.data.user.username,
@@ -63,7 +63,7 @@ function Login() {
 					error.code === "ERR_BAD_REQUEST"
 				) {
 					const data = error.response as AxiosResponse;
-					console.log("status is not 200::", data.data.message);
+					console.log("status is not 200::", data);
 					setErrorMessage(data?.data?.message);
 					// setTimeout(() => {
 					// 	setErrorMessage("");
